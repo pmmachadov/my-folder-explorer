@@ -1,85 +1,110 @@
-// Step 1: Basic setup for reading file input and initializing file selection
+// ### Step 1: Basic Structure Setup and Event Listener
 
-document.addEventListener('DOMContentLoaded', () => {
-    const folderSelector = document.getElementById('folderSelector'); // Selecting the file input element
-
-    // Adding an event listener to handle file selection
-    folderSelector.addEventListener('change', event => {
-        const files = Array.from(event.target.files); // Converting FileList to an Array
-        console.log(files); // Logging the list of selected files to the console
-    });
-});
-
-
-// Step 2: Adding functionality to build a basic directory structure from selected files
-
+// Step 1: Basic setup to handle DOM content loaded and file input changes
 document.addEventListener('DOMContentLoaded', () => {
     const folderSelector = document.getElementById('folderSelector');
 
     folderSelector.addEventListener('change', event => {
+        console.log('Files selected:', event.target.files);
+    });
+});
+
+
+// ### Step 2: Display Files in a Basic List
+
+// Step 2: Display the files in a basic list
+document.addEventListener('DOMContentLoaded', () => {
+    const folderSelector = document.getElementById('folderSelector');
+    const folderContents = document.getElementById('folderContents');
+
+    folderSelector.addEventListener('change', event => {
         const files = Array.from(event.target.files);
-        const structure = buildStructure(files); // Build directory structure from files
-        console.log(structure); // Log the structured directory to the console
+        folderContents.innerHTML = ''; // Clear previous contents
+        files.forEach(file => {
+            const fileElement = document.createElement('div');
+            fileElement.textContent = file.name;
+            folderContents.appendChild(fileElement);
+        });
+    });
+});
+
+
+// ### Step 3: Introduce File Structure Building
+
+// Step 3: Build a nested structure based on file paths
+document.addEventListener('DOMContentLoaded', () => {
+    const folderSelector = document.getElementById('folderSelector');
+    const folderContents = document.getElementById('folderContents');
+
+    folderSelector.addEventListener('change', event => {
+        const files = Array.from(event.target.files);
+        folderContents.innerHTML = '';
+        const structure = buildStructure(files);
+        console.log('Folder Structure:', structure);
     });
 
-    // Function to organize files into a hierarchical structure based on their paths
-    function buildStructure(files) {
-        const root = {}; // Creating the root of the directory structure
+    const buildStructure = files => {
+        const root = {};
         files.forEach(file => {
-            const parts = file.webkitRelativePath.split('/'); // Splitting the file path
-            let currentLevel = root; // Starting from the root
-            parts.forEach((part, index) => {
+            const parts = file.webkitRelativePath.split('/');
+            let currentLevel = root;
+            parts.forEach(part => {
                 if (!currentLevel[part]) {
-                    currentLevel[part] = index === parts.length - 1 ? file : {}; // Creating nodes in the structure
+                    currentLevel[part] = {};
                 }
-                currentLevel = currentLevel[part]; // Navigating deeper
+                currentLevel = currentLevel[part];
             });
         });
-        return root; // Returning the built structure
-    }
+        return root;
+    };
 });
 
 
-// Step 3: Displaying the hierarchical structure in the DOM
+// ### Step 4: Recursive Display of Nested File Structure
 
+// Step 4: Recursive display of the file structure and add basic interaction
 document.addEventListener('DOMContentLoaded', () => {
-    const folderContents = document.getElementById('folderContents');
     const folderSelector = document.getElementById('folderSelector');
+    const folderContents = document.getElementById('folderContents');
 
     folderSelector.addEventListener('change', event => {
         const files = Array.from(event.target.files);
+        folderContents.innerHTML = '';
         const structure = buildStructure(files);
-        displayStructure(structure, folderContents); // Displaying the structured files
+        displayStructure(structure, folderContents);
     });
 
-    function buildStructure(files) {
+    const buildStructure = files => {
         const root = {};
         files.forEach(file => {
             const parts = file.webkitRelativePath.split('/');
             let currentLevel = root;
             parts.forEach((part, index) => {
                 if (!currentLevel[part]) {
-                    currentLevel[part] = index === parts.length - 1 ? file : {};
+                    currentLevel[part] = index === parts.length - 1 ? { '_file': file } : {};
                 }
                 currentLevel = currentLevel[part];
             });
         });
         return root;
-    }
+    };
 
-    // Function to display structured directory in the DOM
-    function displayStructure(structure, parentElement) {
-        for (let key in structure) {
+    const displayStructure = (structure, parentElement, level = 0) => {
+        Object.keys(structure).forEach(key => {
+            if (key === '_file') return;
+
             const item = structure[key];
             const itemElement = document.createElement('div');
             itemElement.textContent = key;
-            parentElement.appendChild(itemElement); // Adding each item to the parent element
+            itemElement.style.paddingLeft = `${level * 20} px`;
+            parentElement.appendChild(itemElement);
 
-            if (typeof item === 'object' && !(item instanceof File)) {
+            if (!item['_file']) {
                 const container = document.createElement('div');
                 itemElement.appendChild(container);
-                displayStructure(item, container); // Recursively display nested items
+                displayStructure(item, container, level + 1);
             }
-        }
-    }
+        });
+    };
 });
+

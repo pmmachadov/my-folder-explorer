@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="./src/style/style.css">
+    <title>Folder Structure Viewer</title>
+
+</head>
+
+<body>
+    <header>
+        <h2>Folder Structure Viewer</h2>
+        <label for="folderSelector" class="btn btn-info">Select Folder</label>
+        <input type="file" id="folderSelector" webkitdirectory directory multiple hidden>
+    </header>
+    <main class="container">
+        <div id="folderContents" class="sidebar"></div>
+        <div id="fileContent" class="content-area"></div>
+    </main>
+    <script src="./src/script.js"></script>
+</body>
+
+</html>

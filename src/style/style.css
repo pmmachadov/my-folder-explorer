@@ -1,0 +1,108 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    height: 100%;
+    width: 100%;
+}
+
+header {
+    align-items: center;
+    background: #2C3E50;
+    color: white;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 1.25rem;
+    text-align: center;
+}
+
+label.btn.btn-info {
+    background: #3B4F63;
+    border: 0.2rem solid #5A92AF;
+    border-radius: 0.25rem;
+    color: white;
+    cursor: pointer;
+    padding: 0.625rem 1.25rem;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 3.75rem);
+}
+
+.sidebar {
+    background: #D1E4ED;
+    flex: 0 0 auto;
+    order: 1;
+    overflow-y: auto;
+    padding: 1.25rem;
+}
+
+.content-area {
+    background: #2092E486;
+    flex: 1 0 auto;
+    order: 2;
+    overflow-y: auto;
+    padding: 2rem 1rem;
+}
+
+.directory, .file {
+    border-radius: 0.25rem;
+    cursor: pointer;
+    margin: 0.3125rem 0;
+    padding: 0.3125rem 0.625rem;
+    transition: background-color 0.3s;
+}
+
+.hidden {
+    display: none;
+}
+
+/* General icon style */
+.directory::before, .file::before {
+    font-family: 'Material Icons';
+    margin-right: 0.3125rem;
+    vertical-align: bottom;
+}
+
+
+.file[data-type="pdf"]::before {
+    content: 'picture_as_pdf';
+}
+
+.file[data-type="txt"]::before {
+    content: 'description';
+}
+
+.file[data-type="jpg"], .file[data-type="png"], .file[data-type="gif"]::before {
+    content: 'image';
+}
+
+.file[data-type="mp3"], .file[data-type="wav"]::before {
+    content: 'audiotrack';
+}
+
+.file[data-type="mp4"], .file[data-type="avi"]::before {
+    content: 'movie';
+}
+
+.file[data-type="js"]::before {
+    content: 'code';
+}
+
+.file[data-type="html"]::before {
+    content: 'code';
+}
+
+.file[data-type="css"]::before {
+    content: 'code';
+}
+
+.directory::before {
+    content: 'folder';
+}

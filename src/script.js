@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         displayStructure(structure, folderContents);
     });
 
-    function buildStructure(files) {
+    const buildStructure = files => {
         const root = {};
         files.forEach(file => {
             const parts = file.webkitRelativePath.split('/');
@@ -22,9 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         return root;
-    }
+    };
 
-    function displayStructure(structure, parentElement, level = 0) {
+    const displayStructure = (structure, parentElement, level = 0) => {
         Object.keys(structure).forEach(key => {
             if (key === '_file') return;
 
@@ -35,29 +35,27 @@ document.addEventListener('DOMContentLoaded', () => {
             itemElement.classList.add(item['_file'] ? 'file' : 'directory');
 
             if (item['_file']) {
-                itemElement.addEventListener('click', (event) => displayFileContent(item['_file'], event));
+                itemElement.addEventListener('click', event => displayFileContent(item['_file'], event));
             } else {
                 const container = document.createElement('div');
                 container.className = 'content hidden';
                 itemElement.appendChild(container);
-                itemElement.addEventListener('click', event => {
-                    toggleDirectoryContents(container, event);
-                });
+                itemElement.addEventListener('click', event => toggleDirectoryContents(container, event));
                 displayStructure(item, container, level + 1);
             }
 
             parentElement.appendChild(itemElement);
         });
-    }
+    };
 
-    function displayFileContent(file, event) {
-        event.stopPropagation();  // Prevent the event from bubbling up
+    const displayFileContent = (file, event) => {
+        event.stopPropagation();
         const contentDisplay = document.getElementById('fileContent');
         const reader = new FileReader();
         reader.onload = () => {
             const pre = document.createElement('pre');
             pre.textContent = reader.result;
-            pre.style.whiteSpace = 'pre-wrap';  // Maintain whitespace formatting
+            pre.style.whiteSpace = 'pre-wrap';
             contentDisplay.innerHTML = '';
             contentDisplay.appendChild(pre);
         };
@@ -65,11 +63,10 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("File could not be read: " + reader.error.message);
         };
         reader.readAsText(file);
-    }
+    };
 
-    function toggleDirectoryContents(container, event) {
+    const toggleDirectoryContents = (container, event) => {
         event.stopPropagation();
-
         if (container.classList.contains('hidden')) {
             container.classList.remove('hidden');
             container.style.display = "block";
@@ -77,6 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
             container.classList.add('hidden');
             container.style.display = "none";
         }
-    }
+    };
 
 });

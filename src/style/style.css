@@ -65,11 +65,10 @@ label.btn.btn-info {
 
 /* General icon style */
 .directory::before, .file::before {
-    font-family: 'Material Icons';
+    font-family: 'Material Icons', sans-serif;
     margin-right: 0.3125rem;
     vertical-align: bottom;
 }
-
 
 .file[data-type="pdf"]::before {
     content: 'picture_as_pdf';

@@ -8,6 +8,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add an event listener to the file input element for when the user selects files.
     folderSelector.addEventListener('change', event => {
         // Converts the FileList object into an array to facilitate manipulation.
+        //         En JavaScript, puedes usar diferentes tipos de eventos para un input de tipo archivo.El evento change es comúnmente utilizado porque se dispara cada vez que el valor del elemento de entrada cambia, es decir, cuando el usuario selecciona un nuevo archivo o archivos.Sin embargo, puedes considerar otros eventos dependiendo de lo que necesitas lograr.Aquí hay algunas alternativas:
+
+        //         input: Este evento es similar a change, pero para inputs de tipo archivo no hay mucha diferencia práctica.Se dispara cuando el valor de un < input > o < textarea > cambia.
+
+        //             click: Este evento podría usarse para realizar alguna acción justo antes de que se abra el cuadro de diálogo de archivos, aunque no detectará cambios en los archivos seleccionados por sí mismo.
+
+        // focus y blur: Estos eventos pueden ser útiles si necesitas realizar alguna acción cuando el input de archivos gana o pierde el foco, aunque no están directamente relacionados con la selección de archivos.
+
+        // drag y drop: Estos eventos son útiles si estás implementando funcionalidad de arrastrar y soltar para la selección de archivos.
+
+        // Permiten manejar los archivos que son arrastrados a un área específica y soltados allí.
+
         const files = Array.from(event.target.files);
         // Clear the current folder contents display.
         folderContents.innerHTML = '';
@@ -22,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const root = {}; // Initialize the root of the structure.
         files.forEach(file => {
             // Split the file's relative path into parts to create nested objects.
+            console.log(e.target.files);
             const parts = file.webkitRelativePath.split('/'); //file.webkitRelativePath: This is accessing the webkitRelativePath property of the file object. The file object here is assumed to have been retrieved from an input of type file with the webkitdirectory attribute enabled, which allows users to select directories instead of individual files. The webkitRelativePath provides the path of the file relative to the root of the directory selected by the user. For example, if a user selects a folder named Documents and within it a file located at Reports/2023/Report1.pdf, the webkitRelativePath would be Reports/2023/Report1.pdf.
 
             // .split('/'): This method is used to split a string into an array of substrings based on a specified delimiter, in this case, the forward slash(/). Splitting the string webkitRelativePath by / divides the path into its constituent directories and file name.Continuing with the earlier example, the result of file.webkitRelativePath.split('/') would be an array["Reports", "2023", "Report1.pdf"].
@@ -31,6 +44,32 @@ document.addEventListener('DOMContentLoaded', () => {
             //             let currentLevel = root;
             // This line initializes currentLevel as a reference to the root object, which represents the top level of the directory structure.Initially, currentLevel points to this top - level object, and as the code iterates through parts of the path, currentLevel will be used to navigate and modify deeper levels of the structure.
 
+
+            //             Ejemplo de cómo Funciona
+            // Supongamos que tienes los siguientes archivos:
+
+            //             documents / report / january / report.docx
+            //             documents / report / february / report.docx
+            // Al procesar estos archivos con el código, root se expandirá para incluir cada parte de la ruta como una clave en el objeto, con cada clave apuntando a otro objeto que representa la siguiente parte del camino, así:
+
+            // {
+            //     "documents": {
+            //         "report": {
+            //             "january": {
+            //                 "report.docx": {
+            //                     "_file": [File Object] // Contiene el objeto File real para 'january/report.docx'
+            //                 }
+            //             },
+            //             "february": {
+            //                 "report.docx": {
+            //                     "_file": [File Object] // Contiene el objeto File real para 'february/report.docx'
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
+
+
             //                 parts.forEach((part, index) => {...});
             // This loop iterates over each segment of the file's path (split into parts earlier), allowing the construction of a nested directory structure. Each part is a folder or file name derived from splitting the file's webkitRelativePath by '/'.
 
@@ -39,8 +78,11 @@ document.addEventListener('DOMContentLoaded', () => {
             //         currentLevel[part] refers to a property of the object currentLevel where part is the key name(directory or file name).
 
             //             currentLevel[part] = index === parts.length - 1 ? { '_file': file } : {};
+
             // This line assigns a new object to currentLevel[part].
+
             // If the current part is the last segment of the path(index === parts.length - 1), it means this part represents a file.In this case, { '_file': file } is assigned, creating an object with a property _file that holds the File object.This signifies that the node in the structure is a file rather than a directory.
+
             // If it is not the last segment, an empty object { } is assigned, indicating that this node represents a directory that may contain more files or directories.
 
             //     currentLevel = currentLevel[part];
@@ -81,7 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
         Object.keys(structure).forEach(key => {
             // Ignore the '_file' key as it's used only to store file data.
             if (key === '_file') return;
-
             const item = structure[key];    // Retrieve the current item from the structure.
             const itemElement = document.createElement('div');  // Create a div element to represent the item.
             itemElement.textContent = key;  // Set the text content of the element to the item's name.
